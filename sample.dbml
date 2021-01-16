@@ -16,7 +16,7 @@ Table rooms as R {
 Table households as H {
   id guid [pk, increment]
   name varchar
-  headOfHousehold guid [ref: - users.id]
+  headOfHousehold guid
   created_at timestamp
   modified_at timestamp
 }
@@ -27,10 +27,16 @@ Table users as U {
   full_name varchar
   email varchar
   created_at timestamp
-  household guid [ref: > households.id]
+  household guid
   identity varchar
   provider varchar
 }
+
+Ref name_optional {
+  households.headOfHousehold - users.id
+}
+
+Ref name_optional2: users.household > households.id
 
 Enum cadence {
   once
