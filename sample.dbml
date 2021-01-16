@@ -1,0 +1,61 @@
+Project project_name {
+  database_type: 'MSSQL'
+  Note: 'Roomby'
+}
+
+Table rooms as R {
+  id guid [pk, increment]
+  name varchar
+  created_at timestamp
+  modified_at timestamp
+  household guid [ref: > households.id]
+  icon varchar
+  purchaseTotal decimal
+}
+
+Table households as H {
+  id guid [pk, increment]
+  name varchar
+  headOfHousehold guid [ref: - users.id]
+  created_at timestamp
+  modified_at timestamp
+}
+
+// Creating tables
+Table users as U {
+  id guid [pk, increment] // auto-increment
+  full_name varchar
+  email varchar
+  created_at timestamp
+  household guid [ref: > households.id]
+  identity varchar
+  provider varchar
+}
+
+Enum cadence {
+  once
+  daily
+  weekly
+  monthly
+  yearly
+  //custom
+}
+
+Table tasks as T [note: 'This will likely end up being stored in a document db']{
+  id guid [pk, increment]
+  room guid [ref: > rooms.id]
+  cadence cadence
+  //customCadence varchar
+  description varchar
+  priority int
+}
+
+Table purchases as P [note: 'This will likely end up being stored in a document db']{
+  id guid [pk, increment]
+  room guid [ref: > rooms.id]
+  url varchar
+  store varchar
+  price decimal
+  priority int
+  bought boolean
+}
