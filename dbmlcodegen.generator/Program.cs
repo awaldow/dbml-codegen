@@ -10,7 +10,7 @@ namespace dbmlcodegen.generator
                    .WithParsed<Options>(o =>
                    {
                        Console.WriteLine($"Parsing {o.InputFile}");
-                       using(Parser p = new Parser(File.ReadAllText(o.InputFile))) {
+                       using(Parser p = new Parser(o.InputFile)) {
                            p.Parse();
                        }
                    });
