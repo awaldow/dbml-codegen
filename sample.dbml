@@ -12,6 +12,8 @@ Table rooms as R {
   icon varchar
   purchaseTotal decimal
 
+  Note: 'Stores data about a room'
+
   indexes {
     id [pk]
     created_at [note: 'Date']
