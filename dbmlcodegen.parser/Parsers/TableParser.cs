@@ -20,7 +20,7 @@ namespace dbmlcodegen.parser.Parsers
             {
                 do
                 {
-                    line = reader.ReadLine();
+                    line = reader.ReadLine().Trim();
                     if (line.IndexOf("{") != -1) // First line, might have table name and alias, also note
                     {
                         var split = line.Split(" ");
@@ -35,30 +35,36 @@ namespace dbmlcodegen.parser.Parsers
                     }
                     else if (line.IndexOf("{") == -1 && line.IndexOf("}") != 0) // Intermediate row
                     {
-                        var split = line.Split(" ");
-                        if (split[0] == "indexes")
+                        var split = line.Split("[");
+                        var column = split[0].Split(" ");
+                        var columnSettings = split.Length > 1 ? split[1] : "";
+                        if (column[0] == "indexes")
                         {
 
                         }
-                        else if (split[0] == "Note:")
+                        else if (column[0] == "Note:")
                         {
-                            ret.Note = split[1].Replace("\'", string.Empty).Trim();
+                            ret.Note = column[1].Replace("\'", string.Empty).Trim();
                         }
-                        else
+                        else if(column.Length > 1)
                         {
-                            var columnName = split[0].Trim();
-                            var columnType = split[1].Trim().Replace("\'", string.Empty);
+                            var columnName = column[0].Trim();
+                            var columnType = column[1].Trim().Replace("\'", string.Empty);
                             var newColumn = new Column
                             {
                                 Name = columnName,
                                 Type = columnType
                             };
 
-                            if (split.Length > 2 && split[2].IndexOf("[") != -1)
+                            if (columnSettings.Length > 0)
                             {
-                                if (split[2].IndexOf(",") != -1) // settings list
+                                if (columnSettings.IndexOf("ref") != -1) // inline ref
                                 {
-                                    var settingsSplit = split[2].Replace("[", "").Replace("]", "").Split(",");
+                                    
+                                }
+                                else // settings list
+                                {
+                                    var settingsSplit = columnSettings.Replace("[", "").Replace("]", "").Split(",");
                                     foreach (var setting in settingsSplit)
                                     {
                                         var settingValue = "";
@@ -69,10 +75,6 @@ namespace dbmlcodegen.parser.Parsers
                                         var columnSetting = new ColumnSetting(setting, settingValue);
                                         newColumn.ColumnSettings.Add(columnSetting);
                                     }
-                                }
-                                else if (split[2].IndexOf("ref") != -1) // inline ref
-                                {
-
                                 }
                             }
                         }

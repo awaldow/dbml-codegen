@@ -4,6 +4,7 @@ Project sampleProject {
 }
 
 Table rooms as R {
+  
   id guid [pk, increment]
   name varchar
   created_at timestamp
