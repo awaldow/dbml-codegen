@@ -42,7 +42,7 @@ namespace dbmlcodegen.parser.Parsers
                         }
                         else if (split[0] == "Note:")
                         {
-
+                            ret.Note = split[1].Replace("\'", string.Empty).Trim();
                         }
                         else
                         {
