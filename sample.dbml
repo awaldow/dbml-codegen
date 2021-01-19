@@ -11,6 +11,12 @@ Table rooms as R {
   household guid [ref: > households.id]
   icon varchar
   purchaseTotal decimal
+
+  indexes {
+    id [pk]
+    created_at [note: 'Date']
+    household [type: hash]
+  }
 }
 
 Table households as H {
