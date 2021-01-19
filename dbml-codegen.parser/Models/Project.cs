@@ -8,5 +8,9 @@ namespace dbmlcodegen.parser.Models {
         public Project() {
             this.Tables = new List<Table>();
         }
+
+        public static Project fromString(string projectString) {
+            
+        }
     }
 }

@@ -1,12 +1,19 @@
 ﻿using System;
 
-namespace dbml_codegen.generator
+namespace dbmlcodegen.generator
 {
     class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+             Parser.Default.ParseArguments<Options>(args)
+                   .WithParsed<Options>(o =>
+                   {
+                       Console.WriteLine($"Parsing {o.InputFile}");
+                       using(Parser p = new Parser(File.ReadAllText(o.InputFile))) {
+                           p.Parse();
+                       }
+                   });
         }
     }
 }

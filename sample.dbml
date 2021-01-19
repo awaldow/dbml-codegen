@@ -1,4 +1,4 @@
-Project project_name {
+Project sampleProject {
   database_type: 'MSSQL'
   Note: 'Roomby'
 }
