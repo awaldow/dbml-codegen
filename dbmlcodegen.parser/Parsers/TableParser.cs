@@ -3,7 +3,7 @@ using dbmlcodegen.parser.Models;
 
 namespace dbmlcodegen.parser.Parsers
 {
-    public class TableParser: ITokenParser<Table>
+    public class TableParser : ITokenParser<Table>
     {
         private string table { get; set; }
 
@@ -35,9 +35,47 @@ namespace dbmlcodegen.parser.Parsers
                     }
                     else if (line.IndexOf("{") == -1 && line.IndexOf("}") != 0) // Intermediate row
                     {
-                        var split = line.Split(":");
-                        var field = split[0].Trim();
-                        var value = split[1].Trim().Replace("\'", string.Empty);
+                        var split = line.Split(" ");
+                        if (split[0] == "indexes")
+                        {
+
+                        }
+                        else if (split[0] == "Note:")
+                        {
+
+                        }
+                        else
+                        {
+                            var columnName = split[0].Trim();
+                            var columnType = split[1].Trim().Replace("\'", string.Empty);
+                            var newColumn = new Column
+                            {
+                                Name = columnName,
+                                Type = columnType
+                            };
+
+                            if (split.Length > 2 && split[2].IndexOf("[") != -1)
+                            {
+                                if (split[2].IndexOf(",") != -1) // settings list
+                                {
+                                    var settingsSplit = split[2].Replace("[", "").Replace("]", "").Split(",");
+                                    foreach (var setting in settingsSplit)
+                                    {
+                                        var settingValue = "";
+                                        if (setting.IndexOf(":") != -1) // default or note, so we need to extract the value
+                                        {
+                                            settingValue = setting.Split(":")[1].Replace("'", "").Trim();
+                                        }
+                                        var columnSetting = new ColumnSetting(setting, settingValue);
+                                        newColumn.ColumnSettings.Add(columnSetting);
+                                    }
+                                }
+                                else if (split[2].IndexOf("ref") != -1) // inline ref
+                                {
+
+                                }
+                            }
+                        }
                     }
                 }
                 while (line.IndexOf("}") == -1 && line != null);
