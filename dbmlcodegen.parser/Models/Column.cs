@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace dbmlcodegen.parser.Models
 {
     public class Column

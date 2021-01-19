@@ -1,3 +1,5 @@
+using CommandLine;
+
 namespace dbmlcodegen.generator
 {
     public class Options

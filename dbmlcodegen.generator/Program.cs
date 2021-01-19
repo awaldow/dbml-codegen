@@ -1,4 +1,6 @@
 ﻿using System;
+using CommandLine;
+using dbmlcodegen.parser;
 
 namespace dbmlcodegen.generator
 {
@@ -10,9 +12,8 @@ namespace dbmlcodegen.generator
                    .WithParsed<Options>(o =>
                    {
                        Console.WriteLine($"Parsing {o.InputFile}");
-                       using(Parser p = new Parser(o.InputFile)) {
-                           p.Parse();
-                       }
+                       DBMLParser p = new DBMLParser(o.InputFile);
+                       p.Parse();
                    });
         }
     }

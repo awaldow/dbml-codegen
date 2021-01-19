@@ -1,12 +1,18 @@
-namespace dbmlcodegen.parser.Models
+using System;
+using System.IO;
+using System.Text;
+using dbmlcodegen.parser.Models;
+using dbmlcodegen.parser.Parsers;
+
+namespace dbmlcodegen.parser
 {
-    public class Parser
+    public class DBMLParser
     {
         private string inputDocumentPath { get; set; }
         private StreamReader reader { get; set; }
         public Project Project { get; set; }
 
-        public Parser(string input)
+        public DBMLParser(string input)
         {
             inputDocumentPath = input;
             reader = new StreamReader(input);
@@ -17,34 +23,40 @@ namespace dbmlcodegen.parser.Models
         {
             using(reader)
             {
+                var line = "";
                 do 
                 {
                     // (string output, nextStart) = getNextBlock(input, nextStart);
                     // Console.WriteLine(output);
-                    var line = strReader.ReadLine();
-                    var tokens = line.Split(" ");
-                    var tokenType = determineTokenType(line);
-                    var wholeToken = getWholeBlock(reader, line);
-                    switch (tokenType)
+                    line = reader.ReadLine();
+                    if (!string.IsNullOrEmpty(line))
                     {
-                        case TokenType.Project:
-                            Project = new ProjectParser(wholeToken).GenerateProject();
-                            break;
-                        case TokenType.Table:
-                            var table = new TableParser(wholeToken);
-                            Project.Tables.Add(table.GenerateTable());
-                            break;
-                        default:
-                            Console.WriteLine($"No parser for token {tokenType} yet");
+                        var tokens = line.Split(" ");
+                        var tokenType = determineTokenType(line);
+                        var wholeToken = getWholeBlock(reader, line);
+                        switch (tokenType)
+                        {
+                            case TokenType.Project:
+                                Project = new ProjectParser(wholeToken).Generate();
+                                break;
+                            case TokenType.Table:
+                                var table = new TableParser(wholeToken);
+                                Project.Tables.Add(table.Generate());
+                                break;
+                            default:
+                                Console.WriteLine($"No parser for token {tokenType} yet");
+                                break;
+                        }
                     }
                 }
-                while (nextStart != -1);
+                while (line != null);
             }
         }
 
         private string getWholeBlock(StreamReader reader, string line)
         {
-            var ret = new StringBuilder(line);
+            var ret = new StringBuilder();
+            ret = ret.AppendLine(line);
             if (line.IndexOf("}") != -1) // If it's a one line definition (i.e. empty)
             {
                 return ret.ToString();
@@ -72,7 +84,7 @@ namespace dbmlcodegen.parser.Models
                 case "Table": return TokenType.Table;
                 case "Ref": return TokenType.Ref;
                 case "Enum": return TokenType.Enum;
-                default: Console.WriteLine($"No defined token type for {split[0]}"); return null;
+                default: Console.WriteLine($"No defined token type for {split[0]}"); return TokenType.Unknown;
             }
         }
 
@@ -81,7 +93,8 @@ namespace dbmlcodegen.parser.Models
             Project,
             Table,
             Ref,
-            Enum
+            Enum,
+            Unknown
         }
     }
 }

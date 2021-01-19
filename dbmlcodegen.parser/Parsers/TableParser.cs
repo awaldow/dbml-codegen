@@ -11,7 +11,7 @@ namespace dbmlcodegen.parser.Parsers
             table = tableString;
         }
 
-        public Table Generate<Table>()
+        public Table Generate()
         {
             var ret = new Table();
             return ret;
