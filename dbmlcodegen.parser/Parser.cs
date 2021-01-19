@@ -13,13 +13,19 @@ namespace dbmlcodegen.parser.Models
 
         public void Parse()
         {
-            int nextStart = 0;
-            do
+            int fileLine = 0;
+            using (StringReader strReader = new StringReader(inputDocument))
             {
-                (string output, nextStart) = getNextBlock(input, nextStart);
-                Console.WriteLine(output);
+                do 
+                {
+                    // (string output, nextStart) = getNextBlock(input, nextStart);
+                    // Console.WriteLine(output);
+                    var line = strReader.ReadLine();
+                    fileLine++;
+
+                }
+                while (nextStart != -1) ;
             }
-            while (nextStart != -1);
         }
 
         private (string, int) getNextBlock(string input, int startIndex)
