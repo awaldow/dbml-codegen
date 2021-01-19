@@ -2,7 +2,7 @@ using dbmlcodegen.parser.Models;
 
 namespace dbmlcodegen.parser.Parsers
 {
-    public class ProjectParser
+    public class ProjectParser : ITokenParser<Project>
     {
         private string project { get; set; }
 
@@ -11,7 +11,7 @@ namespace dbmlcodegen.parser.Parsers
             project = projectString;
         }
 
-        public Project GenerateProject()
+        public Project Generate<Project>()
         {
             var ret = new Project();
             return ret;

@@ -2,7 +2,7 @@ using dbmlcodegen.parser.Models;
 
 namespace dbmlcodegen.parser.Parsers
 {
-    public class TableParser
+    public class TableParser: ITokenParser<Table>
     {
         private string table { get; set; }
 
@@ -11,7 +11,7 @@ namespace dbmlcodegen.parser.Parsers
             table = tableString;
         }
 
-        public Table GenerateTable()
+        public Table Generate<Table>()
         {
             var ret = new Table();
             return ret;
